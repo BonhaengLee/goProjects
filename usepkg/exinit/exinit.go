@@ -8,7 +8,7 @@ var (
 	a = c + b
 	b = f()
 	c = f()
-	d = 3
+						d = 3
 )
 
 func init() {
