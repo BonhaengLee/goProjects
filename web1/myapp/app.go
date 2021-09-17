@@ -14,9 +14,11 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-// 핸들러를 하나 더 추가해봄
+func indexHandler(w http.ResponseWriter, r *http.Request){ // resp를 write하는 w인자, 사용자의 요청 정보를 가진 r인자 
+	fmt.Fprintf(w, "Hello World") // w인자가 있기 때문에 resp를 보낼 수 있다.
+}
+
 type fooHandler struct{}
-// fooHandler는 필드는 없고 ServeHTTP 메서드만 가지고 있다.
 func (f *fooHandler) ServeHTTP(w http.ResponseWriter, r *http.Request){
 	user := new(User)
 	err := json.NewDecoder(r.Body).Decode(user) // r.Body는 인터페이스이므로 NewDecoder에 줄 수 있음
@@ -41,11 +43,9 @@ func barHandler(w http.ResponseWriter, r *http.Request){
 	fmt.Fprintf(w, "Hello %s!", name)
 }
 
-func main() {
+func NewHttpHandler() http.Handler{
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){ // resp를 write하는 w인자, 사용자의 요청 정보를 가진 r인자 
-		fmt.Fprintf(w, "Hello World") // w인자가 있기 때문에 resp를 보낼 수 있다.
-	})
+	mux.HandleFunc("/", indexHandler)
 
 	mux.HandleFunc("/bar", barHandler)
 	mux.Handle("/foo", &fooHandler{})
